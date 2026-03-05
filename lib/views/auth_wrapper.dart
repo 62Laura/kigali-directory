@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kigali_directory/services/auth_service.dart';
-import 'package:kigali_directory/views/home_screen.dart';
+import 'package:kigali_directory/views/main_navigation.dart';
 import 'package:kigali_directory/views/login_screen.dart';
 import 'package:kigali_directory/views/verify_email_screen.dart';
 
@@ -19,7 +19,7 @@ class AuthWrapper extends ConsumerWidget {
       data: (user) {
         if (user != null) {
           if (user.emailVerified) {
-            return const HomeScreen();
+            return const MainNavigation();
           } else {
             return const VerifyEmailScreen();
           }

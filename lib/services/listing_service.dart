@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kigali_directory/models/listing.dart';
 
@@ -8,11 +9,27 @@ final listingsProvider = StreamProvider<List<Listing>>((ref) {
   return ref.watch(listingServiceProvider).getListings();
 });
 
+final myListingsProvider = StreamProvider<List<Listing>>((ref) {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return Stream.value([]);
+  return ref.watch(listingServiceProvider).getListingsByUser(user.uid);
+});
+
 class ListingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Stream<List<Listing>> getListings() {
     return _firestore.collection('listings').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => Listing.fromFirestore(doc)).toList();
+    });
+  }
+
+  Stream<List<Listing>> getListingsByUser(String userId) {
+    return _firestore
+        .collection('listings')
+        .where('createdBy', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) {
       return snapshot.docs.map((doc) => Listing.fromFirestore(doc)).toList();
     });
   }
