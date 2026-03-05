@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kigali_directory/services/auth_service.dart';
+import 'package:kigali_directory/views/home_screen.dart';
 import 'package:kigali_directory/views/login_screen.dart';
 import 'package:kigali_directory/views/verify_email_screen.dart';
 
@@ -10,12 +11,15 @@ class AuthWrapper extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateChangesProvider);
+    ref.listen(authStateChangesProvider, (_, __) {
+      ref.read(authServiceProvider).resetSessionTimer();
+    });
 
     return authState.when(
       data: (user) {
         if (user != null) {
           if (user.emailVerified) {
-            return const Scaffold(body: Center(child: Text('Home')));
+            return const HomeScreen();
           } else {
             return const VerifyEmailScreen();
           }
@@ -29,9 +33,3 @@ class AuthWrapper extends ConsumerWidget {
     );
   }
 }
-
-final authStateChangesProvider = StreamProvider<dynamic>((ref) {
-  return ref.watch(authServiceProvider).authStateChanges;
-});
-
-final authServiceProvider = Provider<AuthService>((ref) => AuthService());

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kigali_directory/services/auth_service.dart';
 import 'package:kigali_directory/views/signup_screen.dart';
 
@@ -24,10 +25,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             _emailController.text,
             _passwordController.text,
           );
-      // Navigation will be handled by the AuthWrapper
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red.shade700,
+        ),
       );
     } finally {
       if (mounted) {
@@ -41,68 +44,132 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Card(
-            elevation: 8.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 60),
+              // Logo/Brand
+              Row(
                 children: [
-                  Text(
-                    'Welcome Back!',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 24),
-                  TextField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.email),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF4ADE80),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.lock),
-                    ),
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 24),
-                  _isLoading
-                      ? const CircularProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: _login,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                          ),
-                          child: const Text('Login'),
+                    child: const Center(
+                      child: Text(
+                        'K',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
                         ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const SignupScreen(),
-                      ));
-                    },
-                    child: const Text('Don\'t have an account? Sign up'),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Kigali Directory',
+                    style: GoogleFonts.inter(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
-            ),
+              const SizedBox(height: 60),
+              // Headline
+              Text(
+                'Welcome',
+                style: GoogleFonts.inter(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [Color(0xFF4ADE80), Color(0xFF22C55E)],
+                ).createShader(bounds),
+                child: Text(
+                  'back.',
+                  style: GoogleFonts.inter(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Sign in to explore places and services in Kigali.',
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  color: Colors.white54,
+                ),
+              ),
+              const SizedBox(height: 48),
+              // Email Field
+              TextField(
+                controller: _emailController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: 'Email address',
+                  prefixIcon: const Icon(Icons.email_outlined, color: Colors.white38),
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 16),
+              // Password Field
+              TextField(
+                controller: _passwordController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  prefixIcon: const Icon(Icons.lock_outline, color: Colors.white38),
+                ),
+                obscureText: true,
+              ),
+              const SizedBox(height: 32),
+              // Login Button
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator(color: Color(0xFF4ADE80)))
+                    : ElevatedButton(
+                        onPressed: _login,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('Sign In'),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.arrow_forward, size: 20),
+                          ],
+                        ),
+                      ),
+              ),
+              const SizedBox(height: 16),
+              // Sign Up Button
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const SignupScreen(),
+                    ));
+                  },
+                  child: const Text('Create Account'),
+                ),
+              ),
+            ],
           ),
         ),
       ),

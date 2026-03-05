@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kigali_directory/services/auth_service.dart';
+
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
 
@@ -11,9 +13,19 @@ class SignupScreen extends ConsumerStatefulWidget {
 class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
 
   void _signUp() async {
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Passwords do not match'),
+          backgroundColor: Colors.red.shade700,
+        ),
+      );
+      return;
+    }
     setState(() {
       _isLoading = true;
     });
@@ -23,11 +35,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             _passwordController.text,
           );
       if (mounted) {
-        Navigator.of(context).pop(); // Go back to the previous screen (login)
+        Navigator.of(context).pop();
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red.shade700,
+        ),
       );
     } finally {
       setState(() {
@@ -40,68 +55,123 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign Up'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Center(
+      body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Card(
-            elevation: 8.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Create Account',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 24),
-                  TextField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.email),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.lock),
-                    ),
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 24),
-                  _isLoading
-                      ? const CircularProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: _signUp,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                          ),
-                          child: const Text('Sign Up'),
-                        ),
-                ],
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              // Headline
+              Text(
+                'Create',
+                style: GoogleFonts.inter(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
-            ),
+              ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [Color(0xFF4ADE80), Color(0xFF22C55E)],
+                ).createShader(bounds),
+                child: Text(
+                  'account.',
+                  style: GoogleFonts.inter(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Join us to discover amazing places and services in Kigali.',
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  color: Colors.white54,
+                ),
+              ),
+              const SizedBox(height: 48),
+              // Email Field
+              TextField(
+                controller: _emailController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: 'Email address',
+                  prefixIcon: Icon(Icons.email_outlined, color: Colors.white38),
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 16),
+              // Password Field
+              TextField(
+                controller: _passwordController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: 'Password',
+                  prefixIcon: Icon(Icons.lock_outline, color: Colors.white38),
+                ),
+                obscureText: true,
+              ),
+              const SizedBox(height: 16),
+              // Confirm Password Field
+              TextField(
+                controller: _confirmPasswordController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: 'Confirm password',
+                  prefixIcon: Icon(Icons.lock_outline, color: Colors.white38),
+                ),
+                obscureText: true,
+              ),
+              const SizedBox(height: 32),
+              // Sign Up Button
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator(color: Color(0xFF4ADE80)))
+                    : ElevatedButton(
+                        onPressed: _signUp,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('Get Started'),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.arrow_forward, size: 20),
+                          ],
+                        ),
+                      ),
+              ),
+              const SizedBox(height: 24),
+              // Already have account
+              Center(
+                child: TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Already have an account? ',
+                      style: GoogleFonts.inter(color: Colors.white54),
+                      children: [
+                        TextSpan(
+                          text: 'Sign in',
+                          style: GoogleFonts.inter(
+                            color: const Color(0xFF4ADE80),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

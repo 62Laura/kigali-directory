@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kigali_directory/views/auth_wrapper.dart';
 import 'firebase_options.dart';
 
@@ -15,28 +16,140 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // Define theme colors
+  static const Color primaryGreen = Color(0xFF4ADE80);
+  static const Color darkBackground = Color(0xFF0A0F0A);
+  static const Color cardBackground = Color(0xFF1A1F1A);
+  static const Color surfaceColor = Color(0xFF151A15);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kigali Directory',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF7E9C7E)),
+        brightness: Brightness.dark,
+        primaryColor: primaryGreen,
+        scaffoldBackgroundColor: darkBackground,
+        colorScheme: const ColorScheme.dark(
+          primary: primaryGreen,
+          secondary: primaryGreen,
+          surface: surfaceColor,
+          onPrimary: Colors.black,
+          onSecondary: Colors.black,
+          onSurface: Colors.white,
+        ),
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFB2C8B2),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF4F6C4F),
-            foregroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          backgroundColor: darkBackground,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
+          titleTextStyle: GoogleFonts.inter(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
-        textTheme: const TextTheme(
-          headlineSmall: TextStyle(color: Color(0xFF1E2B1E)),
-          bodyMedium: TextStyle(color: Color(0xFF1E2B1E)),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: primaryGreen,
+            foregroundColor: Colors.black,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            textStyle: GoogleFonts.inter(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
-        inputDecorationTheme: const InputDecorationTheme(
-          labelStyle: TextStyle(color: Color(0xFF4F6C4F)),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Colors.white,
+            side: const BorderSide(color: Colors.white24),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            textStyle: GoogleFonts.inter(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        textTheme: GoogleFonts.interTextTheme(
+          ThemeData.dark().textTheme,
+        ).copyWith(
+          headlineLarge: GoogleFonts.inter(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+          headlineMedium: GoogleFonts.inter(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+          headlineSmall: GoogleFonts.inter(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+          bodyLarge: GoogleFonts.inter(
+            fontSize: 16,
+            color: Colors.white70,
+          ),
+          bodyMedium: GoogleFonts.inter(
+            fontSize: 14,
+            color: Colors.white70,
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: cardBackground,
+          labelStyle: const TextStyle(color: Colors.white54),
+          hintStyle: const TextStyle(color: Colors.white38),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.white12),
+          ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF4F6C4F)),
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: primaryGreen, width: 2),
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        ),
+        cardTheme: const CardThemeData(
+          color: cardBackground,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+          ),
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: primaryGreen,
+          foregroundColor: Colors.black,
+        ),
+        iconTheme: const IconThemeData(color: Colors.white70),
+        listTileTheme: ListTileThemeData(
+          tileColor: cardBackground,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          titleTextStyle: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+          subtitleTextStyle: GoogleFonts.inter(
+            fontSize: 14,
+            color: Colors.white54,
           ),
         ),
       ),
