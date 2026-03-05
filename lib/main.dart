@@ -20,8 +20,25 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Kigali Directory',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF7E9C7E)),
         useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFB2C8B2),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF4F6C4F),
+            foregroundColor: Colors.white,
+          ),
+        ),
+        textTheme: const TextTheme(
+          headlineSmall: TextStyle(color: Color(0xFF1E2B1E)),
+          bodyMedium: TextStyle(color: Color(0xFF1E2B1E)),
+        ),
+        inputDecorationTheme: const InputDecorationTheme(
+          labelStyle: TextStyle(color: Color(0xFF4F6C4F)),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF4F6C4F)),
+          ),
+        ),
       ),
       home: const AuthWrapper(),
     );

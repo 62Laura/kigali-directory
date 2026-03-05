@@ -24,6 +24,7 @@ class AuthService {
         email: email,
         password: password,
       );
+      await userCredential.user!.sendEmailVerification();
       // Create a new document for the user with the uid
       await _firestore.collection('users').doc(userCredential.user!.uid).set({
         'email': email,
